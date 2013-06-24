@@ -62,10 +62,10 @@ data = reshape([raw{:}],size(raw));
 subjectTemp = data(:,1);
 reference = cellVectors(:,1);
 protocol = cellVectors(:,2);
-baselineStart = 693960 + data(:,2);
-baselineEnd = 693960 + data(:,3);
-interventionStart = 693960 + data(:,4);
-interventionEnd = 693960 + data(:,5);
+baselineStart = data(:,2);
+baselineEnd = data(:,3);
+interventionStart = data(:,4);
+interventionEnd = data(:,5);
 
 %% Convert subject numbers to cell vector of strings
 subjectStr = num2str(subjectTemp,'%02.0f');
