@@ -37,7 +37,7 @@ for i2 = 1:runTime
     AI1{i2} = AI1{i2}(ia);
     CS1{i2} = CS1{i2}(ia);
     axis1 = subplot(runTime,1,i2);
-    hold(axis1);
+    hold('on');
     bar(axis1,TI2,interp1(TI1{i2},AI1{i2},TI2),'BarWidth',1,'EdgeColor','none','FaceColor',[.7,.7,.7]);
     plot(axis1,TI1{i2},CS1{i2},'Color',[0,0,0],'LineWidth',1);
     xlim([0 24]);
@@ -51,8 +51,8 @@ for i2 = 1:runTime
     if i2 == 1
         title(Title);
     end
-    ylabel(subTitle{i2});
-    set(get(gca,'YLabel'),'Rotation',0);
+    yLabel = ylabel(subTitle{i2});
+    set(yLabel,'Rotation',90);
 end
 
 legend1 = legend('Activity','CS');
