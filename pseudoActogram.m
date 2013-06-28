@@ -56,6 +56,6 @@ for i2 = 1:runTime
 end
 
 legend1 = legend('Activity','CS');
-set(legend1,'Orientation','horizontal','Location','Best');
+set(legend1,'Orientation','horizontal','Location','NorthEast');
 
 end
