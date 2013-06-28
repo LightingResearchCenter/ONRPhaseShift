@@ -4,6 +4,8 @@ fileName = '\\root\projects\ONR PhaseShift\dimesimeterData\Subject33_29Apr2013_D
 sourceData = importFile(fileName);
 dT = datenum(2013,4,25,8,0,0) - sourceData.Time(8994);
 sourceData.Time = sourceData.Time + dT;
+dS = dT * 24 * 60 * 60;
+sourceData.Seconds = sourceData.Seconds + dS;
 %% Import the index file
 indexFile = '\\root\projects\ONR PhaseShift\dimesimeterData\index.xlsx';
 [subject,reference,protocol,baselineStart,baselineEnd,...
