@@ -31,20 +31,6 @@ set(figure1,'PaperUnits','inches',...
 
 title(Title);
 
-% Create date stamp
-dateStamp = ['Printed: ',datestr(now,'mmm. dd, yyyy HH:MM')];
-datePosition = [0.8,.25/11,0.1,0.1];
-dateHandle = annotation(figure1,'textbox',datePosition,...
-    'String',dateStamp,...
-    'FitBoxToText','on',...
-    'HorizontalAlignment','right',...
-    'LineStyle','none');
-% Shift left
-datePosition = get(dateHandle,'Position');
-datePosition(1) = 1-.5/8.5-datePosition(3);
-% datePosition(2) = 1-yMargin-datePosition(4);
-set(dateHandle,'Position',datePosition);
-
 TI2 = 0:.25:24;
 for i2 = 1:runTime
     % Make sure time is unique
@@ -72,5 +58,18 @@ end
 
 legend1 = legend('Activity','CS');
 set(legend1,'Orientation','horizontal','Location','NorthEast');
+
+% Create date stamp
+dateStamp = ['Printed: ',datestr(now,'mmm. dd, yyyy HH:MM')];
+datePosition = [0.8,0,0.1,0.1];
+dateHandle = annotation(figure1,'textbox',datePosition,...
+    'String',dateStamp,...
+    'FitBoxToText','on',...
+    'HorizontalAlignment','right',...
+    'LineStyle','none');
+% Shift left
+datePosition = get(dateHandle,'Position');
+datePosition(1) = 1-.5/8.5-datePosition(3);
+set(dateHandle,'Position',datePosition);
 
 end

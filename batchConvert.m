@@ -31,7 +31,7 @@ for i1 = 1:n1
     fileParts = regexpi(dirInfo(i1).name,...
         'Subject(\d\d)_(\d\d\w\w\w\d\d\d\d)_','tokens');
     fileSubject = fileParts{1}{1};
-    fileDate = datenum(fileParts{1}{2},'ddmmyyyy');
+    fileDate = datenum(fileParts{1}{2},'ddmmmyyyy');
     idx = strcmp(subject,fileSubject);
     crossRef = find(idx,1,'first');
     fileRef = reference(crossRef);
