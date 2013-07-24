@@ -18,7 +18,8 @@ indexFile = '\\root\projects\ONR PhaseShift\dimesimeterData\index.xlsx';
 [subject,reference,protocol,baselineStart,baselineEnd,...
     interventionStart,interventionEnd,wakeTime,bedTime] = importIndex(indexFile);
 %% Process file
-addCS = 0.455014217914063; % Light Goggle CS presciption
+addLux = 40; % Light Goggle presciption
+addCLA = 623.6594955128721; % Light Goggle presciption
 % Decompose file name
 fileSubject = '19';
 fileDate = datenum('01Apr2013','ddmmmyyyy');
@@ -34,8 +35,9 @@ if fileDate > interventionStart(crossRef)
     fileWake = wakeTime(crossRef);
     fileBed = bedTime(crossRef);
     % Modify CS to include prescription
-    sourceData.CS = modCS(sourceData.Time,sourceData.CS,...
-        fileWake,fileBed,fileProtocol,addCS);
+    [sourceData.CLA,sourceData.Lux,sourceData.CS] = ...
+        modLuxCLA(sourceData.Time,sourceData.CLA,sourceData.Lux,...
+        fileWake,fileBed,fileProtocol,addCLA,addLux);
 else
     fileWeek = 'baseline';
     fileStart = baselineStart(crossRef);

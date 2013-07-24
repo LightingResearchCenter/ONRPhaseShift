@@ -17,7 +17,8 @@ dirInfo = dir(fullfile(inputDir,'Subject*'));
 % Preallocate variables
 n1 = length(dirInfo);
 errors = cell(n1,4);
-addCS = 0.455014217914063; % Light Goggle CS presciption
+addLux = 40; % Light Goggle presciption
+addCLA = 623.6594955128721; % Light Goggle presciption
 for i1 = 1:n1
     errors{i1,1} = dirInfo(i1).name;
     % Import data
@@ -44,8 +45,9 @@ for i1 = 1:n1
         fileWake = wakeTime(crossRef);
         fileBed = bedTime(crossRef);
         % Modify CS to include prescription
-        sourceData.CS = modCS(sourceData.Time,sourceData.CS,...
-            fileWake,fileBed,fileProtocol,addCS);
+        [sourceData.CLA,sourceData.Lux,sourceData.CS] = ...
+            modLuxCLA(sourceData.Time,sourceData.CLA,sourceData.Lux,...
+            fileWake,fileBed,fileProtocol,addCLA,addLux);
     else
         fileWeek = 'baseline';
         fileStart = baselineStart(crossRef);
