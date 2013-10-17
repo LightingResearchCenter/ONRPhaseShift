@@ -24,10 +24,10 @@ stage1Txt = 'intervention';
 stage1Mat = repmat(stage1Txt,varCount,1);
 stage1Head =  mat2cell(stage1Mat,ones(1,varCount),length(stage1Txt))';
 
-header1 = [{[]},{[]},stage0Head,stage1Head]; % Combine parts of header1
+header1 = [{[]},stage0Head,stage1Head]; % Combine parts of header1
 
 % Prepare second header row
-header2 = [{'subject'},{'protocol'},varNames,varNames];
+header2 = [{'subject'},varNames,varNames];
 
 % Combine headers
 header = [header1;header2];
@@ -54,35 +54,56 @@ subject = unique(inputData1.subject);
 
 % Organize subject data by stage
 nSubjects = length(subject);
-outputData1 = cell(nSubjects,varCount*2+2);
+nAdvance = sum(strcmpi('advance',inputData1.protocol));
+nDelay = sum(strcmpi('delay',inputData1.protocol));
+outputData1 = cell(nAdvance,varCount*2+1);
+outputData2 = cell(nDelay,varCount*2+1);
+count1 = 1;
+count2 = 1;
 for i1 = 1:nSubjects
     % Subject number
-    outputData1{i1,1} = subject{i1};
     idx0 = strcmpi(subject(i1),inputData1.subject);
-    % Protocol
-    tempProtocol = inputData1.protocol(idx0);
-    outputData1{i1,2} = tempProtocol{1};
-    % stage baseline
-    idx1 = idx0 & strcmpi('baseline',inputData1.stage);
-    if sum(idx1) == 1
-        outputData1(i1,3:varCount+2) = inputData2Cell(idx1,:);
-    end
-    % stage intervention
-    idx2 = idx0 & strcmpi('intervention',inputData1.stage);
-    if sum(idx2) == 1
-        outputData1(i1,varCount+3:varCount*2+2) = inputData2Cell(idx2,:);
+    if sum(strcmpi('advance',inputData1.protocol(idx0))) > 0
+        outputData1{count1,1} = subject{i1};
+        % stage baseline
+        idx1 = idx0 & strcmpi('baseline',inputData1.stage);
+        if sum(idx1) == 1
+            outputData1(count1,2:varCount+1) = inputData2Cell(idx1,:);
+        end
+        % stage intervention
+        idx2 = idx0 & strcmpi('intervention',inputData1.stage);
+        if sum(idx2) == 1
+            outputData1(count1,varCount+2:varCount*2+1) = inputData2Cell(idx2,:);
+        end
+        count1 = count1 + 1;
+    else
+        outputData2{count2,1} = subject{i1};
+        % stage baseline
+        idx1 = idx0 & strcmpi('baseline',inputData1.stage);
+        if sum(idx1) == 1
+            outputData2(count2,2:varCount+1) = inputData2Cell(idx1,:);
+        end
+        % stage intervention
+        idx2 = idx0 & strcmpi('intervention',inputData1.stage);
+        if sum(idx2) == 1
+            outputData2(count2,varCount+2:varCount*2+1) = inputData2Cell(idx2,:);
+        end
+        count2 = count2 + 1;
     end
 end
 
 
 %% Combine headers and data
 output1 = [header;outputData1];
+output2 = [header;outputData2];
 
 %% Create Excel file and write output to appropriate sheet
 % Set sheet names
-sheet1 = 1;
+sheet1 = 'advance group';
+sheet2 = 'delay group';
 % Write to file
 xlswrite(saveFile,output1,sheet1); % Create sheet1
+xlswrite(saveFile,output2,sheet2); % Create sheet2
 
 end
 

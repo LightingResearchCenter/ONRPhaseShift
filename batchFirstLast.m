@@ -42,14 +42,19 @@ for i1 = 1:nFiles
     out.protocol{i1} = fileParts{1}{5};
     out.stage{i1} = fileParts{1}{6};
     % Find matching index entry
-    idx = strcmpi(out.subject{i1},subject);
+    idx0 = strcmpi(out.subject{i1},subject);
+    %% Prep CLA and Lux
+    idxCLA = sourceData.CLA <= 0;
+    sourceData.CLA(idxCLA) = 0.01;
+    idxLux = sourceData.Lux <= 0;
+    sourceData.Lux(idxLux) = 0.01;
     %% Find first and last values
     [out.firstCS{i1},out.lastCS{i1}] = firstLast(sourceData.Time,...
-        sourceData.CS,wakeTime(idx),bedTime(idx),firstHrs,lastHrs);
+        sourceData.CS,wakeTime(idx0),bedTime(idx0),firstHrs,lastHrs);
     [out.firstCLA{i1},out.lastCLA{i1}] = firstLast(sourceData.Time,...
-        log(sourceData.CLA),wakeTime(idx),bedTime(idx),firstHrs,lastHrs);
+        log(sourceData.CLA),wakeTime(idx0),bedTime(idx0),firstHrs,lastHrs);
     [out.firstLux{i1},out.lastLux{i1}] = firstLast(sourceData.Time,...
-        log(sourceData.Lux),wakeTime(idx),bedTime(idx),firstHrs,lastHrs);
+        log(sourceData.Lux),wakeTime(idx0),bedTime(idx0),firstHrs,lastHrs);
 end
 
 %% Save the output
