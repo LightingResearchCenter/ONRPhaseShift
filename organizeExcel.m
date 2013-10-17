@@ -8,44 +8,42 @@ clear out;
 
 %% Determine variable names
 varNames = get(inputData,'VarNames');
-% Remove subject, AIM, and season from varNames
-varNameIdx = strcmpi(varNames,'subject') | strcmpi(varNames,'AIM');
+% Remove subject, stage, and protocol from varNames
+varNameIdx = strcmpi(varNames,'subject') | strcmpi(varNames,'stage') | strcmpi(varNames,'protocol');
 varNames(varNameIdx) = [];
 % Count the number of variables
 varCount = length(varNames);
 
 %% Create header labels
 % Prepare first header row
-AIM0Txt = 'baseline (0)';
-AIM0Mat = repmat(AIM0Txt,varCount,1);
-AIM0Head =  mat2cell(AIM0Mat,ones(1,varCount),length(AIM0Txt))';
+stage0Txt = 'baseline';
+stage0Mat = repmat(stage0Txt,varCount,1);
+stage0Head =  mat2cell(stage0Mat,ones(1,varCount),length(stage0Txt))';
 
-AIM1Txt = 'intervention (1)';
-AIM1Mat = repmat(AIM1Txt,varCount,1);
-AIM1Head =  mat2cell(AIM1Mat,ones(1,varCount),length(AIM1Txt))';
+stage1Txt = 'intervention';
+stage1Mat = repmat(stage1Txt,varCount,1);
+stage1Head =  mat2cell(stage1Mat,ones(1,varCount),length(stage1Txt))';
 
-AIM2Txt = 'post intervention (2)';
-AIM2Mat = repmat(AIM2Txt,varCount,1);
-AIM2Head =  mat2cell(AIM2Mat,ones(1,varCount),length(AIM2Txt))';
-
-header1 = [{[]},AIM0Head,AIM1Head,AIM2Head]; % Combine parts of header1
+header1 = [{[]},{[]},stage0Head,stage1Head]; % Combine parts of header1
 
 % Prepare second header row
-header2 = [{'subject'},varNames,varNames,varNames];
+header2 = [{'subject'},{'protocol'},varNames,varNames];
 
 % Combine headers
 header = [header1;header2];
 
 %% Organize data
-% Seperate subject and AIM from rest of inputData
+% Seperate subject and stage from rest of inputData
 inputData1 = dataset;
 inputData1.subject = inputData.subject;
-inputData1.AIM = inputData.AIM;
+inputData1.stage = inputData.stage;
+inputData1.protocol = inputData.protocol;
 
-% Copy inputData and remove subject and AIM
+% Copy inputData and remove subject, stage, and protocol
 inputData2 = inputData;
 inputData2.subject = [];
-inputData2.AIM = [];
+inputData2.stage = [];
+inputData2.protocol = [];
 
 % Convert inputData2 to cells
 inputData2Cell = dataset2cell(inputData2);
@@ -54,26 +52,25 @@ inputData2Cell(1,:) = []; % Remove variable names
 % Identify unique subject numbers
 subject = unique(inputData1.subject);
 
-% Organize patient data by AIM
+% Organize subject data by stage
 nSubjects = length(subject);
-outputData1 = cell(nSubjects,varCount*3+1);
+outputData1 = cell(nSubjects,varCount*2+2);
 for i1 = 1:nSubjects
     % Subject number
-    outputData1{i1,1} = subject(i1);
-    % AIM 0
-    idx0 = inputData1.subject == subject(i1) & inputData1.AIM == 0;
-    if sum(idx0) == 1
-        outputData1(i1,2:varCount+1) = inputData2Cell(idx0,:);
-    end
-    % AIM 1
-    idx1 = inputData1.subject == subject(i1) & inputData1.AIM == 1;
+    outputData1{i1,1} = subject{i1};
+    idx0 = strcmpi(subject(i1),inputData1.subject);
+    % Protocol
+    tempProtocol = inputData1.protocol(idx0);
+    outputData1{i1,2} = tempProtocol{1};
+    % stage baseline
+    idx1 = idx0 & strcmpi('baseline',inputData1.stage);
     if sum(idx1) == 1
-        outputData1(i1,varCount+2:varCount*2+1) = inputData2Cell(idx1,:);
+        outputData1(i1,3:varCount+2) = inputData2Cell(idx1,:);
     end
-    % AIM 2
-    idx2 = inputData1.subject == subject(i1) & inputData1.AIM == 2;
+    % stage intervention
+    idx2 = idx0 & strcmpi('intervention',inputData1.stage);
     if sum(idx2) == 1
-        outputData1(i1,varCount*2+2:varCount*3+1) = inputData2Cell(idx2,:);
+        outputData1(i1,varCount+3:varCount*2+2) = inputData2Cell(idx2,:);
     end
 end
 

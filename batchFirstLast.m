@@ -17,7 +17,7 @@ nFiles = length(dirInfo); % Number of files to be analyzed
 
 %% Preallocate output variables
 out = dataset;
-out.reference = cell(nFiles,1);
+% out.reference = cell(nFiles,1);
 out.subject = cell(nFiles,1);
 out.protocol = cell(nFiles,1);
 out.stage = cell(nFiles,1);
@@ -37,7 +37,7 @@ for i1 = 1:nFiles
     fileParts = regexpi(fileName,...
         'ref(\d*)_(\d\d\d\d\d\d)-(\d\d\d\d\d\d)_sub(\d\d)_(\w*)_(\w*)',...
         'tokens');
-    out.reference{i1} = fileParts{1}{1};
+%     out.reference{i1} = fileParts{1}{1};
     out.subject{i1} = fileParts{1}{4};
     out.protocol{i1} = fileParts{1}{5};
     out.stage{i1} = fileParts{1}{6};
@@ -57,5 +57,5 @@ outputPath = fullfile(outputDir,['firstLastOutput_',...
     datestr(now,'yy-mm-dd_HHMM'),'.mat']);
 save(outputPath,'out');
 % Convert to Excel
-% organizeExcel(outputPath);
+organizeExcel(outputPath);
 end
