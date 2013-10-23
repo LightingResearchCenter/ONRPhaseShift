@@ -1,5 +1,4 @@
 function batchFirstLast
-addpath('phasorReport');
 
 %% File handling
 startDir = fullfile([filesep,filesep],'root','projects',...
