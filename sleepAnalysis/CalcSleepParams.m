@@ -57,7 +57,7 @@ ActualSleep = sum(sleepState(inBedSleeping))*Epoch/60;
 % Calculate Actual Wake Time in minutes
 ActualWake = sum(sleepState(inBedSleeping)==0)*Epoch/60;
 % Calculate Assumed Sleep in minutes
-AssumedSleep = ActualSleep + ActualWake;
+AssumedSleep = (SleepEnd - SleepStart)*24*60;
 % Calculate Actual Sleep Time Percentage
 ActualSleepPercent = ActualSleep/AssumedSleep;
 % Calculate Actual Wake Time Percentage
