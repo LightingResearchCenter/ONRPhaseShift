@@ -26,8 +26,8 @@ end
 %% Attempt to apply a gaussian filter to Activity
 try
     AI = gaussian(AI,4);
-catch err
-    warning(err.message);
+catch % err
+%     warning(err.message);
 end
 
 %% Convert time to seconds from start of first day
@@ -73,6 +73,10 @@ SE = tSec2(idxE);
 SD = abs(SE - SO);
 
 %% Calculate basic mid-sleep (MS) in seconds
-MS = SO + SD/2;
+MS = mod(SO + SD/2,86400);
+% if mid-sleep occurs between midnight and noon add 24 hours
+if MS < 43200
+    MS = MS + 86400;
+end
 
 end

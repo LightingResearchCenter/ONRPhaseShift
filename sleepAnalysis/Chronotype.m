@@ -37,7 +37,7 @@ SDweek = (SDw*WD + SDf*FD)/TD; % average sleep duration for the week in seconds
 MSF = mean(MS(~idxW)); % mid-sleep on free days in seconds
 MSFsc = MSF - (SDf - SDweek)/2; % corrected mid-sleep on free days in seconds
 
-%% Convert MSFsc to hours from midnight
-MSFsc = mod(MSFsc/3600,24); % corrected mid-sleep on free days in hours
+%% Convert MSFsc to days
+MSFsc = mod(MSFsc/86400,1); % corrected mid-sleep on free days in days
 
 end
