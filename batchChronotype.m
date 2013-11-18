@@ -34,8 +34,13 @@ for i1 = 1:nFiles
     out.stage{i1} = fileParts{1}{6};
     % Find matching index entry
     idx0 = strcmpi(out.subject{i1},subject);
-    tempWake = wakeTime(idx0);
-    tempBed = bedTime(idx0);
+    if strcmpi(out.stage{i1},'baseline')
+        tempWake = mod(wakeTime(idx0) + 1.5/24,1);
+        tempBed = mod(bedTime(idx0) + 1.5/24,1);
+    else % intervention
+        tempWake = wakeTime(idx0);
+        tempBed = bedTime(idx0);
+    end
     days = unique(floor(sourceData.Time));
     if tempBed > tempWake
         tempWake = tempWake + 1;
