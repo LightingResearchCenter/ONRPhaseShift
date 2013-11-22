@@ -50,6 +50,8 @@ for i1 = 1:nFiles
     if numel(sourceData.Time) ~= 0
         out.MSFsc{i1} = ...
             Chronotype(sourceData.Time,sourceData.Activity,SPrep,GU);
+        [out.ActualSleep{i1},~,~,~,out.SleepEfficiency{i1},~,~,~,~,~] = ...
+            AnalyzeFile(sourceData.Time,sourceData.Activity,SPrep,GU,true);
     end
 end
 
