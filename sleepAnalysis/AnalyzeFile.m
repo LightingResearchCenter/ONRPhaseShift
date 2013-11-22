@@ -1,6 +1,7 @@
 function [ActualSleep,ActualSleepPercent,ActualWake,...
-    ActualWakePercent,SleepEfficiency,Latency,SleepBouts,WakeBouts,...
-    MeanSleepBout,MeanWakeBout] = AnalyzeFile(Time,Activity,BedTime,WakeTime)
+    ActualWakePercent,SleepEfficiency,Latency,SleepBouts,...
+    WakeBouts,MeanSleepBout,MeanWakeBout] = ...
+    AnalyzeFile(Time,Activity,BedTime,WakeTime,average)
 
 Days = length(BedTime);
 
@@ -28,6 +29,19 @@ for i = 1:Days
     catch err
         display(err);
     end
+end
+
+if average
+    ActualSleep = mean(cell2mat(ActualSleep));
+    ActualSleepPercent = mean(cell2mat(ActualSleepPercent));
+    ActualWake = mean(cell2mat(ActualWake));
+    ActualWakePercent = mean(cell2mat(ActualWakePercent));
+    SleepEfficiency = mean(cell2mat(SleepEfficiency));
+    Latency = mean(cell2mat(Latency));
+    SleepBouts = mean(cell2mat(SleepBouts));
+    WakeBouts = mean(cell2mat(WakeBouts));
+    MeanSleepBout = mean(cell2mat(MeanSleepBout));
+    MeanWakeBout = mean(cell2mat(MeanWakeBout));
 end
 
 end
