@@ -58,6 +58,11 @@ raw(R) = dateNums(R);
 %% Create output variable
 data = reshape([raw{:}],size(raw));
 
+%% Remove any rows with NaN values
+idxNaN = isnan(data);
+idxNaNvec = sum(idxNaN,2) > 0;
+data(idxNaNvec,:) = [];
+
 %% Allocate imported array to column variable names
 subjectTemp = data(:,1);
 reference = cellVectors(:,1);
@@ -71,5 +76,8 @@ bedTime = data(:,7);
 
 %% Convert subject numbers to cell vector of strings
 subjectStr = num2str(subjectTemp,'%02.0f');
-subject = num2cell(subjectStr,2);
+subject = strtrim(num2cell(subjectStr,2)); % convert to cell and remove spaces
+
+end
+
 
