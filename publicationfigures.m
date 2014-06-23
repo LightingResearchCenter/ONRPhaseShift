@@ -311,6 +311,7 @@ hOrangeGlasses.EdgeColor = 'none';
 hLegend = legend([hBlueGoggles,hOrangeGlasses],'Blue Goggles','Orange Glasses');
 hLegend.Location = 'southoutside';
 hLegend.Orientation = 'horizontal';
+hLegend.EdgeColor = [0,0,0];
 end
 
 function delaying(hAxes,wakeTime,sleepTime)
@@ -337,6 +338,7 @@ hOrangeGlasses.EdgeColor = 'none';
 hLegend = legend([hBlueGoggles,hOrangeGlasses],'Blue Goggles','Orange Glasses');
 hLegend.Location = 'southoutside';
 hLegend.Orientation = 'horizontal';
+hLegend.EdgeColor = [0,0,0];
 end
 
 
