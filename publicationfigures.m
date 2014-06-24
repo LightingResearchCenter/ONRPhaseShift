@@ -43,11 +43,13 @@ filePathArray = fullfile(projectDir,fileNameArray);
 close all
 set(0,'DefaultAxesFontName','Arial');
 set(0,'DefaultTextFontName','Arial');
+gray1 = [153,153,153]/255;
+gray2 = [230,230,230]/255;
 %% Figure 1: Early Chronotypes - Advancing Light-Dark Pattern
 % Constants
-wakeTimeArray = datenum(0,0,0,[6;5],[36;06],0);
+wakeTimeArray = [datenum(0,0,0,6,36,0);datenum(0,0,0,5,06,0)];
 wakeTimeStr = cellstr(datestr(wakeTimeArray,'HH:MM'));
-sleepTimeArray = datenum(0,0,0,[23;21],[06;36],0);
+sleepTimeArray = [datenum(0,0,0,23,06,0);datenum(0,0,0,21,36,0)];
 sleepTimeStr = cellstr(datestr(sleepTimeArray,'HH:MM'));
 cbtMin = datenum(0,0,0,03,48,0);
 dlmo = datenum(0,0,0,20,48,0);
@@ -70,8 +72,8 @@ hFigure = figure('Renderer','painters');
 hold on;
 hPlota = plot(commonTimeArrayBaseline_days,meanCsArrayBaseline);
 hPlotb = plot(commonTimeArrayIntervention_days,-meanCsArrayIntervention);
-formatline(hPlota);
-formatline(hPlotb);
+formatplot(hPlota);
+formatplot(hPlotb);
 hAxes = gca;
 formataxes(hAxes,'Advancing Light-Dark Pattern')
 baseline(hAxes)
@@ -79,16 +81,16 @@ intervention(hAxes)
 wakesleepannotation(hAxes,wakeTimeStr,sleepTimeStr)
 advancing(hAxes,wakeTimeArray(2),sleepTimeArray(2))
 
-textarrow(hAxes,cbtMin,'CBT_{min}')
-textarrow(hAxes,dlmo,'DLMO')
+textarrow([cbtMin,cbtMin],[hAxes.YLim(2)*.25,0],'CBT_{min}')
+textarrow([dlmo,dlmo],[hAxes.YLim(2)*.25,0],'DLMO')
 
 saveas(hFigure,fullfile(saveDir,'Early Chronotypes Advancing.pdf'));
 
 %% Figure 2: Early Chronotypes - Delaying Light-Dark Pattern
 % Constants
-wakeTimeArray = datenum(0,0,0,[6;5],[38;08],0);
+wakeTimeArray = [datenum(0,0,0,6,38,0);datenum(0,0,0,5,08,0)];
 wakeTimeStr = cellstr(datestr(wakeTimeArray,'HH:MM'));
-sleepTimeArray = datenum(0,0,0,[23;21],[12;42],0);
+sleepTimeArray = [datenum(0,0,0,23,12,0);datenum(0,0,0,21,42,0)];
 sleepTimeStr = cellstr(datestr(sleepTimeArray,'HH:MM'));
 cbtMin = datenum(0,0,0,03,59,0);
 dlmo = datenum(0,0,0,20,59,0);
@@ -111,8 +113,8 @@ hFigure = figure('Renderer','painters');
 hold on;
 hPlota = plot(commonTimeArrayBaseline_days,meanCsArrayBaseline);
 hPlotb = plot(commonTimeArrayIntervention_days,-meanCsArrayIntervention);
-formatline(hPlota);
-formatline(hPlotb);
+formatplot(hPlota);
+formatplot(hPlotb);
 hAxes = gca;
 formataxes(hAxes,'Delaying Light-Dark Pattern')
 baseline(hAxes)
@@ -120,16 +122,16 @@ intervention(hAxes)
 wakesleepannotation(hAxes,wakeTimeStr,sleepTimeStr)
 delaying(hAxes,wakeTimeArray(2),sleepTimeArray(2))
 
-textarrow(hAxes,cbtMin,'CBT_{min}')
-textarrow(hAxes,dlmo,'DLMO')
+textarrow([cbtMin,cbtMin],[hAxes.YLim(2)*.25,0],'CBT_{min}')
+textarrow([dlmo,dlmo],[hAxes.YLim(2)*.25,0],'DLMO')
 
 saveas(hFigure,fullfile(saveDir,'Early Chronotypes Delaying.pdf'));
 
 %% Figure 3: Late Chronotypes - Advancing Light-Dark Pattern
 % Constants
-wakeTimeArray = datenum(0,0,0,[9;7],[09;39],0);
+wakeTimeArray = [datenum(0,0,0,9,09,0);datenum(0,0,0,7,39,0)];
 wakeTimeStr = cellstr(datestr(wakeTimeArray,'HH:MM'));
-sleepTimeArray = datenum(0,0,0,[01;23],[00;32],0);
+sleepTimeArray = [datenum(0,0,0,01,00,0);datenum(0,0,0,23,32,0)];
 sleepTimeStr = cellstr(datestr(sleepTimeArray,'HH:MM'));
 cbtMin = datenum(0,0,0,04,31,0);
 dlmo = datenum(0,0,0,21,31,0);
@@ -152,8 +154,8 @@ hFigure = figure('Renderer','painters');
 hold on;
 hPlota = plot(commonTimeArrayBaseline_days,meanCsArrayBaseline);
 hPlotb = plot(commonTimeArrayIntervention_days,-meanCsArrayIntervention);
-formatline(hPlota);
-formatline(hPlotb);
+formatplot(hPlota);
+formatplot(hPlotb);
 hAxes = gca;
 formataxes(hAxes,'Advancing Light-Dark Pattern')
 baseline(hAxes)
@@ -161,16 +163,16 @@ intervention(hAxes)
 wakesleepannotation(hAxes,wakeTimeStr,sleepTimeStr)
 advancing(hAxes,wakeTimeArray(2),sleepTimeArray(2))
 
-textarrow(hAxes,cbtMin,'CBT_{min}')
-textarrow(hAxes,dlmo,'DLMO')
+textarrow([cbtMin,cbtMin],[hAxes.YLim(2)*.25,0],'CBT_{min}')
+textarrow([dlmo,dlmo],[hAxes.YLim(2)*.25,0],'DLMO')
 
 saveas(hFigure,fullfile(saveDir,'Late Chronotypes Advancing.pdf'));
 
 %% Figure 4: Late Chronotypes - Delaying Light-Dark Pattern
 % Constants
-wakeTimeArray = datenum(0,0,0,[6;5],[38;08],0);
+wakeTimeArray = [datenum(0,0,0,9,13,0);datenum(0,0,0,7,43,0)];
 wakeTimeStr = cellstr(datestr(wakeTimeArray,'HH:MM'));
-sleepTimeArray = datenum(0,0,0,[23;21],[12;42],0);
+sleepTimeArray = [datenum(0,0,0,00,49,0);datenum(0,0,0,23,19,0)];
 sleepTimeStr = cellstr(datestr(sleepTimeArray,'HH:MM'));
 cbtMin = datenum(0,0,0,04,37,0);
 dlmo = datenum(0,0,0,21,37,0);
@@ -193,8 +195,8 @@ hFigure = figure('Renderer','painters');
 hold on;
 hPlota = plot(commonTimeArrayBaseline_days,meanCsArrayBaseline);
 hPlotb = plot(commonTimeArrayIntervention_days,-meanCsArrayIntervention);
-formatline(hPlota);
-formatline(hPlotb);
+formatplot(hPlota);
+formatplot(hPlotb);
 hAxes = gca;
 formataxes(hAxes,'Delaying Light-Dark Pattern')
 baseline(hAxes)
@@ -202,16 +204,15 @@ intervention(hAxes)
 wakesleepannotation(hAxes,wakeTimeStr,sleepTimeStr)
 delaying(hAxes,wakeTimeArray(2),sleepTimeArray(2))
 
-textarrow(hAxes,cbtMin,'CBT_{min}')
-textarrow(hAxes,dlmo,'DLMO')
+textarrow([cbtMin,cbtMin],[hAxes.YLim(2)*.25,0],'CBT_{min}')
+textarrow([dlmo,dlmo],[hAxes.YLim(2)*.25,0],'DLMO')
 
 saveas(hFigure,fullfile(saveDir,'Late Chronotypes Delaying.pdf'));
 
 end
 
-function formatline(hArea)
-hArea.Color = [104,104,104]/255;
-
+function formatplot(hPlot)
+hPlot.Color = [104,104,104]/255;
 end
 
 function formataxes(hAxes,plotTitle)
@@ -237,8 +238,8 @@ hXlabel.VerticalAlignment = 'cap';
 
 % Label and format the y-axis
 ylabel(hAxes,'Circadian Stimulus (CS)');
-hAxes.YLim = [-0.5,0.5];
-hAxes.YTick = -0.5:0.1:0.5;
+hAxes.YLim = [-0.7,0.7];
+hAxes.YTick = -0.7:0.1:0.7;
 hAxes.YTickLabel = abs(hAxes.YTick);
 
 % Close in box around plot
@@ -291,61 +292,31 @@ function advancing(hAxes,wakeTime,sleepTime)
 twoHours = 2/24;
 threeHours = 3/24;
 
-y = [0,0,hAxes.YLim(1),hAxes.YLim(1)];
-xBlueGoggles = [wakeTime,wakeTime+twoHours,wakeTime+twoHours,wakeTime];
-xOrangeGlasses = [sleepTime,sleepTime-threeHours,sleepTime-threeHours,sleepTime];
-C = ones(size(y));
+yBlue   = [hAxes.YLim(1)*.8,-.5];
+yOrange = [hAxes.YLim(1)*.8,0];
+xBlue   = wakeTime+twoHours/2;
+xOrange = sleepTime-threeHours/2;
 
-blue = [191,204,230]/255;
-hBlueGoggles = patch(xBlueGoggles,y,C);
-hBlueGoggles.FaceColor = blue;
-hBlueGoggles.FaceAlpha = 0.5;
-hBlueGoggles.EdgeColor = 'none';
-
-orange = [255,217,191]/255;
-hOrangeGlasses = patch(xOrangeGlasses,y,C);
-hOrangeGlasses.FaceColor = orange;
-hOrangeGlasses.FaceAlpha = 0.5;
-hOrangeGlasses.EdgeColor = 'none';
-
-hLegend = legend([hBlueGoggles,hOrangeGlasses],'Blue Goggles','Orange Glasses');
-hLegend.Location = 'southoutside';
-hLegend.Orientation = 'horizontal';
-hLegend.EdgeColor = [0,0,0];
+textarrow([xBlue,xBlue],yBlue,'Blue Goggles')
+textarrow([xOrange,xOrange],yOrange,'Orange Glasses')
 end
 
 function delaying(hAxes,wakeTime,sleepTime)
 twoHours = 2/24;
 threeHours = 3/24;
 
-y = [0,0,hAxes.YLim(1),hAxes.YLim(1)];
-xBlueGoggles = [sleepTime,sleepTime-threeHours,sleepTime-threeHours,sleepTime];
-xOrangeGlasses = [wakeTime,wakeTime+twoHours,wakeTime+twoHours,wakeTime];
-C = ones(size(y));
+yBlue   = [hAxes.YLim(1)*.8,-.5];
+yOrange = [hAxes.YLim(1)*.8,0];
+xBlue   = sleepTime-threeHours/2;
+xOrange = wakeTime+twoHours/2;
 
-blue = [191,204,230]/255;
-hBlueGoggles = patch(xBlueGoggles,y,C);
-hBlueGoggles.FaceColor = blue;
-hBlueGoggles.FaceAlpha = 0.5;
-hBlueGoggles.EdgeColor = 'none';
+textarrow([xBlue,xBlue],yBlue,'Blue Goggles')
+textarrow([xOrange,xOrange],yOrange,'Orange Glasses')
 
-orange = [255,217,191]/255;
-hOrangeGlasses = patch(xOrangeGlasses,y,C);
-hOrangeGlasses.FaceColor = orange;
-hOrangeGlasses.FaceAlpha = 0.5;
-hOrangeGlasses.EdgeColor = 'none';
-
-hLegend = legend([hBlueGoggles,hOrangeGlasses],'Blue Goggles','Orange Glasses');
-hLegend.Location = 'southoutside';
-hLegend.Orientation = 'horizontal';
-hLegend.EdgeColor = [0,0,0];
 end
 
 
-function textarrow(hAxes,xValue,annotationStr)
-
-x = [xValue,xValue];
-y = [hAxes.YLim(2)*.25,0];
+function textarrow(x,y,annotationStr)
 set(gcf,'Units','normalized');
 [x,y] = axescoord2figurecoord(x,y);
 annotation('textarrow',x,y,'String',annotationStr);
