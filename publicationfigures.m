@@ -3,7 +3,7 @@ function publicationfigures
 %   Detailed explanation goes here
 
 % Specify the project directory
-projectDir = '\\root\projects\ONR-PhaseShift\dimesimeterData';
+projectDir = '\\root\projects\ONR-PhaseShift\dimesimeterDataNoTreatment';
 saveDir = '\\root\projects\ONR-PhaseShift\graphics\fromGeoff\single plots';
 
 % Find .mat files
@@ -74,7 +74,7 @@ filePathArrayIntervention = filePathArray(fileIdx & interventionIdx);
 figTitle = 'Advancing Light-Dark Pattern';
 savePath = fullfile(saveDir,'Early Group Advancing.pdf');
 
-createfigure(filePathArrayBaseline,filePathArrayIntervention,wakeTimeArray,sleepTimeArray,cbtMin,dlmo,savePath,figTitle,'advancing',interventionWake,interventionBed)
+createfigure(filePathArrayBaseline,filePathArrayIntervention,wakeTimeArray,sleepTimeArray,cbtMin,dlmo,savePath,figTitle,'advance',interventionWake,interventionBed)
 
 
 %% Figure 2: Early Group - Delaying Light-Dark Pattern
@@ -98,7 +98,7 @@ filePathArrayIntervention = filePathArray(fileIdx & interventionIdx);
 figTitle = 'Delaying Light-Dark Pattern';
 savePath = fullfile(saveDir,'Early Group Delaying.pdf');
 
-createfigure(filePathArrayBaseline,filePathArrayIntervention,wakeTimeArray,sleepTimeArray,cbtMin,dlmo,savePath,figTitle,'delaying',interventionWake,interventionBed)
+createfigure(filePathArrayBaseline,filePathArrayIntervention,wakeTimeArray,sleepTimeArray,cbtMin,dlmo,savePath,figTitle,'delay',interventionWake,interventionBed)
 
 
 %% Figure 3: Late Group - Advancing Light-Dark Pattern
@@ -122,7 +122,7 @@ filePathArrayIntervention = filePathArray(fileIdx & interventionIdx);
 figTitle = 'Advancing Light-Dark Pattern';
 savePath = fullfile(saveDir,'Late Group Advancing.pdf');
 
-createfigure(filePathArrayBaseline,filePathArrayIntervention,wakeTimeArray,sleepTimeArray,cbtMin,dlmo,savePath,figTitle,'advancing',interventionWake,interventionBed)
+createfigure(filePathArrayBaseline,filePathArrayIntervention,wakeTimeArray,sleepTimeArray,cbtMin,dlmo,savePath,figTitle,'advance',interventionWake,interventionBed)
 
 %% Figure 4: Late Group - Delaying Light-Dark Pattern
 % Constants
@@ -145,7 +145,7 @@ filePathArrayIntervention = filePathArray(fileIdx & interventionIdx);
 figTitle = 'Delaying Light-Dark Pattern';
 savePath = fullfile(saveDir,'Late Group Delaying.pdf');
 
-createfigure(filePathArrayBaseline,filePathArrayIntervention,wakeTimeArray,sleepTimeArray,cbtMin,dlmo,savePath,figTitle,'delaying',interventionWake,interventionBed)
+createfigure(filePathArrayBaseline,filePathArrayIntervention,wakeTimeArray,sleepTimeArray,cbtMin,dlmo,savePath,figTitle,'delay',interventionWake,interventionBed)
 
 end
 
@@ -159,26 +159,36 @@ sleepTimeStr = cellstr(datestr(sleepTimeArray,'HH:MM'));
 [commonTimeArrayBaseline_days,meanCsArrayBaseline] = millerizefiles(filePathArrayBaseline);
 [commonTimeArrayIntervention_days,meanCsArrayIntervention] = millerizefiles(filePathArrayIntervention);
 
+% Add treatment to intervention
+addCS = 0.455; % Light Goggle presciption
+meanCsArrayIntervention = modifyCS(commonTimeArrayIntervention_days,meanCsArrayIntervention,wakeTimeArray(2),sleepTimeArray(2),advanceDelay,addCS);
+
 % Plot data
 hFigure = figure('Renderer','painters');
 hold on;
-hPlota = plot(commonTimeArrayBaseline_days,meanCsArrayBaseline);
-hPlotb = plot(commonTimeArrayIntervention_days,-meanCsArrayIntervention);
-formatplot(hPlota);
-formatplot(hPlotb);
+
 hAxes = gca;
 formataxes(hAxes,figTitle)
 baseline(hAxes)
 intervention(hAxes)
 wakesleepannotation(hAxes,wakeTimeStr,sleepTimeStr)
-if strcmp(advanceDelay,'advancing')
-    advancing(hAxes,wakeTimeArray(2),sleepTimeArray(2),interventionWake,interventionBed)
+plotbed(hAxes,wakeTimeArray(1),sleepTimeArray(1),'baseline');
+plotbed(hAxes,wakeTimeArray(2),sleepTimeArray(2),'intervention');
+if strcmp(advanceDelay,'advance')
+    advancing(hAxes,wakeTimeArray(2),sleepTimeArray(2))
 else
-    delaying(hAxes,wakeTimeArray(2),sleepTimeArray(2),interventionWake,interventionBed)
+    delaying(hAxes,wakeTimeArray(2),sleepTimeArray(2))
 end
 
-textarrow([cbtMin,cbtMin],[hAxes.YLim(2)*.25,0],['CBT_{min} ',datestr(cbtMin,'HH:MM')])
-textarrow([dlmo,dlmo],[hAxes.YLim(2)*.25,0],['DLMO ',datestr(dlmo,'HH:MM')])
+textarrow([cbtMin,cbtMin],[hAxes.YLim(2)*.9,0],['CBT_{min} ',datestr(cbtMin,'HH:MM')])
+textarrow([dlmo,dlmo],[hAxes.YLim(2)*.9,0],['DLMO ',datestr(dlmo,'HH:MM')])
+
+createbox(hAxes)
+
+hPlota = plot(commonTimeArrayBaseline_days,meanCsArrayBaseline);
+hPlotb = plot(commonTimeArrayIntervention_days,-meanCsArrayIntervention);
+formatplot(hPlota);
+formatplot(hPlotb);
 
 saveas(hFigure,savePath);
 end
@@ -199,6 +209,7 @@ hTitle = title(hAxes,plotTitle);
 % Format all axes
 hAxes.TickDir = 'out';
 hAxes.Box     = 'off';
+hAxes.Color = 'none';
 hAxes.GridColor = [0,0,0];
 hAxes.MinorGridColor = [0,0,0];
 hAxes.XColor = [0,0,0];
@@ -216,14 +227,18 @@ hAxes.YLim = [-0.7,0.7];
 hAxes.YTick = -0.7:0.1:0.7;
 hAxes.YTickLabel = abs(hAxes.YTick);
 
+end
+
+function createbox(hAxes)
 % Close in box around plot
-boxX = [hAxes.XLim(1),hAxes.XLim(2),hAxes.XLim(2)];
-boxY = [hAxes.YLim(2),hAxes.YLim(2),hAxes.YLim(1)];
-line(boxX,boxY,'Color','k')
+x = hAxes.XLim(1);
+w = hAxes.XLim(2) - x;
+y = hAxes.YLim(1);
+h = hAxes.YLim(2) - y;
+rectangle('Position',[x,y,w,h]);
 
 % Create line at 0
-line(hAxes.XLim,[0,0],'Color','k')
-
+plot(hAxes.XLim,[0,0],'Color','k')
 end
 
 %%
@@ -250,126 +265,168 @@ end
 
 %%
 function wakesleepannotation(hAxes,wakeTimeStr,sleepTimeStr)
-x = hAxes.XLim(1) + .025;
-y = hAxes.YLim*.75;
+x = (hAxes.XLim(2) - hAxes.XLim(1))/2;
+y = hAxes.YLim*.9;
 
 str1 = {['Wake ',wakeTimeStr{1}];['Sleep ',sleepTimeStr{1}]};
 hText1 = text(x,y(2),str1);
 hText1.VerticalAlignment = 'top';
-hText1.HorizontalAlignment = 'left';
+hText1.HorizontalAlignment = 'center';
 
 str2 = {['Wake ',wakeTimeStr{2}];['Sleep ',sleepTimeStr{2}]};
 hText2 = text(x,y(1),str2);
 hText2.VerticalAlignment = 'bottom';
-hText2.HorizontalAlignment = 'left';
+hText2.HorizontalAlignment = 'center';
 end
 
 %%
-function advancing(hAxes,wakeTime,sleepTime,interventionWake,interventionBed)
-idx = interventionBed < .5;
-interventionBed(idx) = interventionBed(idx) + 1;
+function advancing(hAxes,wakeTime,sleepTime)
 
 twoHours = 2/24;
 threeHours = 3/24;
 
-yBlue   = [hAxes.YLim(1)*.8,0];
-yOrange = [hAxes.YLim(1)*.8,0];
-xBlue   = wakeTime+twoHours/2;
-xOrange = sleepTime-threeHours/2;
+gray = [96,96,96]/255;
 
-textarrow([xBlue,xBlue],yBlue,'Blue Glasses')
-textarrow([xOrange,xOrange],yOrange,'Orange Glasses')
+y = hAxes.YLim(1);
+h = abs(hAxes.YLim(1));
+xBlueGoggles = wakeTime;
 
-
-black = [0,0,0]/255;
-
-y = [0,0,hAxes.YLim(1)*.7,hAxes.YLim(1)*.7];
-C = ones(size(y));
-xBlueGoggles = [min(interventionWake),max(interventionWake)+twoHours,max(interventionWake)+twoHours,min(interventionWake)];
-if max(interventionBed) > 1
-    xOrangeGlasses = [1,min(interventionBed)-threeHours,min(interventionBed)-threeHours,1];
-    hOrangeGlasses = patch(xOrangeGlasses,y,C);
-    hOrangeGlasses.FaceColor = black;
-    hOrangeGlasses.FaceAlpha = 0.5;
+if sleepTime > 1
+    xOrangeGlasses = sleepTime-threeHours;
+    w = 1-xOrangeGlasses;
+    hOrangeGlasses = rectangle('Position',[xOrangeGlasses,y,w,h]);
+    hOrangeGlasses.FaceColor = gray;
     hOrangeGlasses.EdgeColor = 'none';
     
-    xOrangeGlasses = [mod(max(interventionBed),1),0,0,mod(max(interventionBed),1)];
-    hOrangeGlasses = patch(xOrangeGlasses,y,C);
-    hOrangeGlasses.FaceColor = black;
-    hOrangeGlasses.FaceAlpha = 0.5;
+    xOrangeGlasses = 0;
+    w = mod(sleepTime,1);
+    hOrangeGlasses = rectangle('Position',[xOrangeGlasses,y,w,h]);
+    hOrangeGlasses.FaceColor = gray;
     hOrangeGlasses.EdgeColor = 'none';
     
 else
-    xOrangeGlasses = [max(interventionBed),min(interventionBed)-threeHours,min(interventionBed)-threeHours,max(interventionBed)];
-    hOrangeGlasses = patch(xOrangeGlasses,y,C);
-    hOrangeGlasses.FaceColor = black;
-    hOrangeGlasses.FaceAlpha = 0.5;
+    xOrangeGlasses = sleepTime-threeHours;
+    w = threeHours;
+    hOrangeGlasses = rectangle('Position',[xOrangeGlasses,y,w,h]);
+    hOrangeGlasses.FaceColor = gray;
     hOrangeGlasses.EdgeColor = 'none';
 end
 
-hBlueGoggles = patch(xBlueGoggles,y,C);
-hBlueGoggles.FaceColor = black;
-hBlueGoggles.FaceAlpha = 0.5;
+w = twoHours;
+hBlueGoggles = rectangle('Position',[xBlueGoggles,y,w,h]);
+hBlueGoggles.FaceColor = gray;
 hBlueGoggles.EdgeColor = 'none';
 
-
-
+xBlue = wakeTime + twoHours/2;
+xOrange = sleepTime - threeHours/2;
+lighttext(hAxes,xBlue,xOrange)
 end
 
 %%
-function delaying(hAxes,wakeTime,sleepTime,interventionWake,interventionBed)
-
-idx = interventionBed < .5;
-interventionBed(idx) = interventionBed(idx) + 1;
-
+function delaying(hAxes,wakeTime,sleepTime)
 twoHours = 2/24;
 threeHours = 3/24;
 
-yBlue   = [hAxes.YLim(1)*.8,0];
-yOrange = [hAxes.YLim(1)*.8,0];
-xBlue   = sleepTime-threeHours/2;
-xOrange = wakeTime+twoHours/2;
+gray = [96,96,96]/255;
 
-textarrow([xBlue,xBlue],yBlue,'Blue Glasses')
-textarrow([xOrange,xOrange],yOrange,'Orange Glasses')
+y = hAxes.YLim(1);
+h = abs(hAxes.YLim(1));
+xOrangeGlasses = wakeTime;
 
-black = [0,0,0]/255;
-
-y = [0,0,hAxes.YLim(1)*.7,hAxes.YLim(1)*.7];
-C = ones(size(y));
-
-xOrangeGlasses = [min(interventionWake),max(interventionWake)+twoHours,max(interventionWake)+twoHours,min(interventionWake)];
-if max(interventionBed) > 1
-    xBlueGoggles = [1,min(interventionBed)-threeHours,min(interventionBed)-threeHours,1];
-    hBlueGoggles = patch(xBlueGoggles,y,C);
-    hBlueGoggles.FaceColor = black;
-    hBlueGoggles.FaceAlpha = 0.5;
+if sleepTime > 1
+    xBlueGoggles = sleepTime-threeHours;
+    w = 1 - xBlueGoggles;
+    hBlueGoggles = rectangle('Position',[xBlueGoggles,y,w,h]);
+    hBlueGoggles.FaceColor = gray;
     hBlueGoggles.EdgeColor = 'none';
 
-    xBlueGoggles = [mod(max(interventionBed),1),0,0,mod(max(interventionBed),1)];
-    hBlueGoggles = patch(xBlueGoggles,y,C);
-    hBlueGoggles.FaceColor = black;
-    hBlueGoggles.FaceAlpha = 0.5;
+    xBlueGoggles = 0;
+    w = mod(sleepTime,1);
+    hBlueGoggles = rectangle('Position',[xBlueGoggles,y,w,h]);
+    hBlueGoggles.FaceColor = gray;
     hBlueGoggles.EdgeColor = 'none';
 else
-    xBlueGoggles = [max(interventionBed),min(interventionBed)-threeHours,min(interventionBed)-threeHours,max(interventionBed)];
-    hBlueGoggles = patch(xBlueGoggles,y,C);
-    hBlueGoggles.FaceColor = black;
-    hBlueGoggles.FaceAlpha = 0.5;
+    xBlueGoggles = sleepTime-threeHours;
+    w = threeHours;
+    hBlueGoggles = rectangle('Position',[xBlueGoggles,y,w,h]);
+    hBlueGoggles.FaceColor = gray;
     hBlueGoggles.EdgeColor = 'none';
 end
 
-hOrangeGlasses = patch(xOrangeGlasses,y,C);
-hOrangeGlasses.FaceColor = black;
-hOrangeGlasses.FaceAlpha = 0.5;
+w = twoHours;
+hOrangeGlasses = rectangle('Position',[xOrangeGlasses,y,w,h]);
+hOrangeGlasses.FaceColor = gray;
 hOrangeGlasses.EdgeColor = 'none';
+
+xBlue = sleepTime - threeHours/2;
+xOrange = wakeTime + twoHours/2;
+lighttext(hAxes,xBlue,xOrange)
+end
+
+%%
+function lighttext(hAxes,xBlue,xOrange)
+
+y = 0.9*hAxes.YLim(1);
+
+hBlue = text(xBlue,y,{'Blue';'Light';'Glasses'});
+hBlue.VerticalAlignment = 'bottom';
+hBlue.HorizontalAlignment = 'center';
+
+hOrange = text(xOrange,y,{'Orange';'Glasses'});
+hOrange.VerticalAlignment = 'bottom';
+hOrange.HorizontalAlignment = 'center';
 
 end
 
 %%
 function textarrow(x,y,annotationStr)
 set(gcf,'Units','normalized');
+
+hText = text(x(1),y(1),annotationStr);
+hText.Units = 'normalized';
+hText.HorizontalAlignment = 'center';
+hText.VerticalAlignment = 'top';
+
 [x,y] = axescoord2figurecoord(x,y);
-annotation('textarrow',x,y,'String',annotationStr);
+y(1) = y(1)-.05;
+hArrow = annotation('arrow',x,y);
+
+end
+
+
+%%
+function plotbed(hAxes,wakeTime,sleepTime,week)
+
+gray = [192,192,192]/255;
+
+switch week
+    case 'baseline'
+        yMax = hAxes.YLim(2);
+    case 'intervention'
+        yMax = hAxes.YLim(1);
+end
+y = min([0,yMax]);
+h = abs(yMax);
+
+if sleepTime > wakeTime
+    xBed = sleepTime;
+    w = 1 - xBed;
+    hBed = rectangle('Position',[xBed,y,w,h]);
+    hBed.FaceColor = gray;
+    hBed.EdgeColor = 'none';
+
+    xBed = 0;
+    w = wakeTime;
+    hBed = rectangle('Position',[xBed,y,w,h]);
+    hBed.FaceColor = gray;
+    hBed.EdgeColor = 'none';
+else
+    xBed = sleepTime;
+    w = wakeTime - sleepTime;
+    hBed = rectangle('Position',[xBed,y,w,h]);
+    hBed.FaceColor = gray;
+    hBed.EdgeColor = 'none';
+end
+
 
 end
