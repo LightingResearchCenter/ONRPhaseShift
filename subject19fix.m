@@ -1,6 +1,6 @@
 clear
 %% Fix source file
-fileName = '\\root\projects\ONR PhaseShift\dimesimeterData\Subject19_01Apr2013_Dime300wrist.txt';
+fileName = '\\root\projects\ONR-PhaseShift\dimesimeterData\Subject19_01Apr2013_Dime300wrist.txt';
 sourceData = importFile(fileName);
 clear fileName;
 sourceData(2045:15138,2:6) = sourceData(1630:14723,2:6);
@@ -14,7 +14,7 @@ dS = sourceData.Seconds(2) - sourceData.Seconds(1);
 sourceData.Seconds(1:15138) = sourceData.Seconds(1):dS:sourceData.Seconds(1)+dS*15137;
 clear dT dS
 %% Import the index file
-indexFile = '\\root\projects\ONR PhaseShift\dimesimeterData\index.xlsx';
+indexFile = '\\root\projects\ONR-PhaseShift\dimesimeterData\index.xlsx';
 [subject,reference,protocol,baselineStart,baselineEnd,...
     interventionStart,interventionEnd,wakeTime,bedTime] = importIndex(indexFile);
 %% Process file
@@ -49,7 +49,7 @@ idx1 = sourceData.Time >= fileStart & sourceData.Time <= fileEnd;
 sourceData = sourceData(idx1,:);
 
 % Save data
-outputDir = '\\root\projects\ONR PhaseShift\dimesimeterData';
+outputDir = '\\root\projects\ONR-PhaseShift\dimesimeterData';
 outputName = fullfile(outputDir,[fileRef{1},'_',...
     datestr(fileStart,'yymmdd'),'-',...
     datestr(fileEnd,'yymmdd'),'_sub',fileSubject,'_',...

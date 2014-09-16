@@ -1,6 +1,6 @@
 function subject9fix
 %% Fix source file
-fileName = '\\root\projects\ONR PhaseShift\dimesimeterData\Subject09_04Mar2013_Dime300wrist.txt';
+fileName = '\\root\projects\ONR-PhaseShift\dimesimeterData\Subject09_04Mar2013_Dime300wrist.txt';
 sourceData = importFile(fileName);
 % Copy data but not time
 idx1 = 5824;
@@ -19,7 +19,7 @@ sourceData(idx2+1:end,3:6) = tempData;
 
 
 %% Import the index file
-indexFile = '\\root\projects\ONR PhaseShift\dimesimeterData\index.xlsx';
+indexFile = '\\root\projects\ONR-PhaseShift\dimesimeterData\index.xlsx';
 [subject,reference,protocol,baselineStart,baselineEnd,...
     interventionStart,interventionEnd,wakeTime,bedTime] = importIndex(indexFile);
 %% Process file
@@ -50,7 +50,7 @@ idx1 = sourceData.Time >= fileStart & sourceData.Time <= fileEnd;
 sourceData = sourceData(idx1,:);
 
 % Save data
-outputDir = '\\root\projects\ONR PhaseShift\dimesimeterData';
+outputDir = '\\root\projects\ONR-PhaseShift\dimesimeterData';
 outputName = fullfile(outputDir,[fileRef{1},'_',...
     datestr(fileStart,'yymmdd'),'-',...
     datestr(fileEnd,'yymmdd'),'_sub',fileSubject,'_',...
